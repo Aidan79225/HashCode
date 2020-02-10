@@ -20,6 +20,11 @@ public class Main {
             Main main = new Main();
             main.getAnswer(m, p, answer);
 
+            int sum = 0;
+            for (int pick: answer) {
+                sum += p.get(pick);
+            }
+            System.out.println(m - sum);
 
             File out = new File(args[0].split("\\.")[0] + ".out");
             FileOutputStream fo = new FileOutputStream(out);
