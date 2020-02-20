@@ -62,7 +62,7 @@ public class Main {
         }
         ans.add(maxScoreIndex);
         Section section = sections.get(maxScoreIndex.first);
-        sections.remove(maxScoreIndex.first.intValue());
+        section.used = true;
         //update sections
         removeBooks(maxScoreIndex.second, sections);
         //next round
@@ -74,6 +74,9 @@ public class Main {
         int cur = -1;
         UsedBooks curUsedBooks = new UsedBooks();
         for (int i = 0; i < sections.size(); i++) {
+            if (sections.get(i).used) {
+                continue;
+            }
             UsedBooks usedBooks = getScore(d, books, sections.get(i));
             if (usedBooks.score > max) {
                 max = usedBooks.score;
@@ -112,6 +115,7 @@ public class Main {
         public int t;
         public int m;
         public List<Integer> bookScores;
+        public boolean used = false;
 
         Section(List<Integer> bookScores) {
             this.bookScores = bookScores;
