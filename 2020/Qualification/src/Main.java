@@ -26,8 +26,8 @@ public class Main {
                     section.bookIds.add(scanner.nextInt());
                 }
                 sections.add(section);
-//                System.out.println(section);
-//                System.out.println("Score: " + new Main().getScore(d, bookScores, section).score);
+            //    System.out.println(section);
+               System.out.println("Score: " + new Main().getScore(d, bookScores, section).score);
             }
             Main main = new Main();
             main.getAnswer(b, l, d, bookScores, sections);
