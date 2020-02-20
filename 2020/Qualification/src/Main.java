@@ -52,21 +52,35 @@ public class Main {
     }
     List<Pair<Integer, UsedBooks>> ans = new ArrayList<>();
     public void getAnswer(int b, int l, int d, List<Integer> books, List<Section> sections) {
-        if (d <= 0) {
-            return;
+        while(d > 0) {
+            Pair<Integer, UsedBooks> maxScoreIndex = getMaxScoreIndex(d, books, sections);
+            if (maxScoreIndex.first < 0 || maxScoreIndex.second.bookIds.size() == 0) {
+                return;
+            }
+            ans.add(maxScoreIndex);
+            Section section = sections.get(maxScoreIndex.first);
+            section.used = true;
+            d -= section.t;
         }
+
+//        if (d <= 0) {
+//            return;
+//        }
         //get max score
-        Pair<Integer, UsedBooks> maxScoreIndex = getMaxScoreIndex(d, books, sections);
-        if (maxScoreIndex.first < 0 || maxScoreIndex.second.bookIds.size() == 0) {
-            return;
-        }
-        ans.add(maxScoreIndex);
-        Section section = sections.get(maxScoreIndex.first);
-        section.used = true;
+//        Pair<Integer, UsedBooks> maxScoreIndex = getMaxScoreIndex(d, books, sections);
+//        if (maxScoreIndex.first < 0 || maxScoreIndex.second.bookIds.size() == 0) {
+//            return;
+//        }
+//        ans.add(maxScoreIndex);
+//        Section section = sections.get(maxScoreIndex.first);
+//        section.used = true;
+
+
+
         //update sections
-        removeBooks(maxScoreIndex.second, sections);
+//        removeBooks(maxScoreIndex.second, sections);
         //next round
-        getAnswer(b, l, d - section.t, books, sections);
+//        getAnswer(b, l, d - section.t, books, sections);
     }
 
     private Pair<Integer, UsedBooks> getMaxScoreIndex(int d, List<Integer> books, List<Section> sections) {
@@ -77,12 +91,13 @@ public class Main {
             if (sections.get(i).used) {
                 continue;
             }
-            UsedBooks usedBooks = getScore(d, books, sections.get(i));
-            if (usedBooks.score > max) {
-                max = usedBooks.score;
-                cur = i;
-                curUsedBooks = usedBooks;
-            }
+            return new Pair<>(i, getScore(d, books, sections.get(i)));
+//            UsedBooks usedBooks = getScore(d, books, sections.get(i));
+//            if (usedBooks.score > max) {
+//                max = usedBooks.score;
+//                cur = i;
+//                curUsedBooks = usedBooks;
+//            }
         }
         return new Pair<>(cur, curUsedBooks);
     }
@@ -91,10 +106,10 @@ public class Main {
         int day = d - section.t;
         UsedBooks ans = new UsedBooks();
         Iterator<Integer> iterator = section.bookIds.iterator();
+        ans.score += section.bookIds.size();
         while (day > 0) {
             for (int i = 0; i < section.m && iterator.hasNext(); i++) {
                 int id = iterator.next();
-                ans.score += books.get(id);
                 ans.bookIds.add(id);
             }
             --day;
