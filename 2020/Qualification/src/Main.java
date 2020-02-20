@@ -1,4 +1,5 @@
 import java.io.File;
+import java.io.FileOutputStream;
 import java.util.*;
 
 public class Main {
@@ -14,7 +15,7 @@ public class Main {
             for (int i = 0; i < b; i++) {
                 bookScores.add(scanner.nextInt());
             }
-            System.out.println("bookScores: " + bookScores);
+//            System.out.println("bookScores: " + bookScores);
             List<Section> sections = new ArrayList<>();
             for (int i = 0; i < l; i++) {
                 Section section = new Section(bookScores);
@@ -25,16 +26,32 @@ public class Main {
                     section.bookIds.add(scanner.nextInt());
                 }
                 sections.add(section);
-                System.out.println(section);
-                System.out.println("Score: " + new Main().getScore(d, bookScores, section).score);
+            //    System.out.println(section);
+               System.out.println("Score: " + new Main().getScore(d, bookScores, section).score);
             }
-            new Main().getAnswer(b, l, d, bookScores, sections);
+            Main main = new Main();
+            main.getAnswer(b, l, d, bookScores, sections);
+            File out = new File(args[0].split("\\.")[0] + ".out");
+            FileOutputStream fo = new FileOutputStream(out);
+            fo.write(String.format("%d\n", main.ans.size()).getBytes());
+            for (Pair<Integer, UsedBooks> pair: main.ans) {
+                fo.write(String.format("%d %d\n", pair.first, pair.second.bookIds.size()).getBytes());
+                fo.write(
+                        String.format("%s\n", pair.second.bookIds)
+                                .replace("[","")
+                                .replace("]","")
+                                .replace(",","")
+                                .getBytes()
+                );
+            }
 
         } catch (Exception e) {
             e.printStackTrace();
         }
 
     }
+
+    List<Pair<Integer, UsedBooks>> ans = new ArrayList<>();
 
     /**
      * 
@@ -51,9 +68,11 @@ public class Main {
 
         //get max score
         Pair<Integer, UsedBooks> maxScoreIndex = getMaxScoreIndex(d, books, sections);
+        if (maxScoreIndex.first < 0) {
+            return;
+        }
+        ans.add(maxScoreIndex);
         Section section = sections.get(maxScoreIndex.first);
-        System.out.println(String.format("%d %d", maxScoreIndex.first, maxScoreIndex.second.bookIds.size()));
-        System.out.println(maxScoreIndex.second.bookIds);
         sections.remove(maxScoreIndex);
         //update sections
         removeBooks(maxScoreIndex.second, sections);
@@ -78,7 +97,7 @@ public class Main {
     private Pair<Integer, UsedBooks> getMaxScoreIndex(int d, List<Integer> books, List<Section> sections) {
 
         int max = 0;
-        int cur = 0;
+        int cur = -1;
         UsedBooks curUsedBooks = new UsedBooks();
         for (int i = 0; i < sections.size(); i++) {
             UsedBooks usedBooks = getScore(d, books, sections.get(i));

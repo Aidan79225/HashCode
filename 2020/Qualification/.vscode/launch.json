@@ -9,7 +9,11 @@
             "name": "Debug (Launch) - Current File",
             "request": "launch",
             "mainClass": "${file}",
+<<<<<<< HEAD
             "args": ["src/a_example.txt"]
+=======
+            "args": ["src/e_so_many_books.txt"]
+>>>>>>> ans
         },
         {
             "type": "java",
