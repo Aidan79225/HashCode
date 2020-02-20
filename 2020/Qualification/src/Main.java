@@ -29,6 +29,7 @@ public class Main {
 //                System.out.println(section);
 //                System.out.println("Score: " + new Main().getScore(d, bookScores, section).score);
             }
+
             Main main = new Main();
             main.getAnswer(b, l, d, bookScores, sections);
             File out = new File(args[0].split("\\.")[0] + ".out");
@@ -50,41 +51,60 @@ public class Main {
         }
 
     }
-    List<Pair<Integer, UsedBooks>> ans = new ArrayList<>();
-    public void getAnswer(int b, int l, int d, List<Integer> books, List<Section> sections) {
-        if (d <= 0) {
-            return;
-        }
-        //get max score
-        Pair<Integer, UsedBooks> maxScoreIndex = getMaxScoreIndex(d, books, sections);
-        if (maxScoreIndex.first < 0 || maxScoreIndex.second.bookIds.size() == 0) {
-            return;
-        }
-        ans.add(maxScoreIndex);
-        Section section = sections.get(maxScoreIndex.first);
-        section.used = true;
-        //update sections
-        removeBooks(maxScoreIndex.second, sections);
-        //next round
-        getAnswer(b, l, d - section.t, books, sections);
+
+    public int getAvgBook(List<Integer> books) {
+        Collections.sort(books);
+        return books.get(books.size()/10);
     }
 
-    private Pair<Integer, UsedBooks> getMaxScoreIndex(int d, List<Integer> books, List<Section> sections) {
+    List<Pair<Integer, UsedBooks>> ans = new ArrayList<>();
+    public void getAnswer(int b, int l, int d, List<Integer> books, List<Section> sections) {
+        int avg = getAvgBook(books);
+        while (d > 0) {
+            //get max score
+            Pair<Integer, UsedBooks> maxScoreIndex = getMaxScoreIndex(d, books, sections, avg);
+            if (maxScoreIndex.first < 0 || maxScoreIndex.second.bookIds.size() == 0) {
+                return;
+            }
+            ans.add(maxScoreIndex);
+            Section section = sections.get(maxScoreIndex.first);
+            section.used = true;
+            //update sections
+            removeBooks(maxScoreIndex.second, sections);
+            d -= section.t;
+        }
+    }
+
+    private Pair<Integer, UsedBooks> getMaxScoreIndex(int d, List<Integer> books, List<Section> sections, int avg) {
         int max = Integer.MIN_VALUE;
         int cur = -1;
         UsedBooks curUsedBooks = new UsedBooks();
         for (int i = 0; i < sections.size(); i++) {
-            if (sections.get(i).used) {
+            Section section = sections.get(i);
+            if (section.used) {
                 continue;
             }
             UsedBooks usedBooks = getScore(d, books, sections.get(i));
+            int score = usedBooks.score;
+            score -= getLost(section.t, sections, avg);
             if (usedBooks.score > max) {
-                max = usedBooks.score;
+                max = score;
                 cur = i;
                 curUsedBooks = usedBooks;
             }
         }
         return new Pair<>(cur, curUsedBooks);
+    }
+
+    private int getLost(int day, List<Section> sections, int avg) {
+        int sum = 0;
+        for (Section section: sections) {
+            if (section.used) {
+                continue;
+            }
+            sum += section.n*avg*day;
+        }
+        return sum;
     }
 
     private UsedBooks getScore(int d, List<Integer> books, Section section) {
