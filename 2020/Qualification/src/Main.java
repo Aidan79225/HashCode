@@ -36,6 +36,14 @@ public class Main {
 
     }
 
+    /**
+     * 
+     * @param b Books left
+     * @param l Liberies number
+     * @param d deadline left
+     * @param books score of books
+     * @param sections liberies list
+     */
     public void getAnswer(int b, int l, int d, List<Integer> books, List<Section> sections) {
         if (d <= 0) {
             return;
