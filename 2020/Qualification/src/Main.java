@@ -36,10 +36,24 @@ public class Main {
 
     }
 
-    public void getAnswer(int b, int l, int d, List<Integer> books, List<Section> sections) {
+    public void getAnswer(int b, int l, int d, List<Integer> books, List<Section> sections, List<Integer> bookScores) {
         //get max score
         //update sections
         //next round
+    }
+
+    /**
+     * @param bookOrders bookOrders[0] is the books that the first liberary will send to scan
+     * @return total score of submission
+     */
+    public int evaluateFinalAnswer(List<List<Integer>> bookOrders, List<Integer> bookScores){
+        int score = 0;
+        for(List<Integer> booksPerLib : bookOrders){
+            for(int book : booksPerLib){
+                score += bookScores.get(book);
+            }
+        }
+        return score;
     }
 
     private int getMaxScore(int d, List<Integer> books, List<Section> sections) {
