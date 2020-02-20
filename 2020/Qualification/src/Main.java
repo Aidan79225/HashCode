@@ -124,7 +124,12 @@ public class Main {
         public TreeSet<Integer> bookIds = new TreeSet<Integer>(new Comparator<Integer>() {
             @Override
             public int compare(Integer t1, Integer t2) {
-                return bookScores.get(t2) - bookScores.get(t1);
+                int key = bookScores.get(t2) - bookScores.get(t1);
+                if (key == 0) {
+                    return t2 - t1;
+                } else {
+                    return key;
+                }
             }
         });
 
