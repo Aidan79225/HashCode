@@ -43,16 +43,16 @@ public class Main {
     private int getMaxScore(int d, List<Integer> books, List<Section> sections) {
         int max = 0;
         int cur = 0;
-        for (int i = 0; i < sections.size(); i++) {
-          if () {
+        // for (int i = 0; i < sections.size(); i++) {
+        //   if () {
 
-          }
-        }
+        //   }
+        // }
         return max;
     }
 
     private int getScore(int d, Section section) {
-        
+        return 0;
     }
 
     public static class Section {
