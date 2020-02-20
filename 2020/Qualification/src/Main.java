@@ -1,5 +1,3 @@
-import kotlin.Pair;
-
 import java.io.File;
 import java.util.*;
 
@@ -28,8 +26,9 @@ public class Main {
                 }
                 sections.add(section);
                 System.out.println(section);
-                System.out.println("Score: " + new Main().getScore(d, bookScores, section));
+                System.out.println("Score: " + new Main().getScore(d, bookScores, section).score);
             }
+            new Main().getAnswer(b, l, d, bookScores, sections);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -38,12 +37,17 @@ public class Main {
     }
 
     public void getAnswer(int b, int l, int d, List<Integer> books, List<Section> sections) {
+        if (d <= 0) {
+            return;
+        }
         //get max score
         Pair<Integer, UsedBooks> maxScoreIndex = getMaxScoreIndex(d, books, sections);
-        Section section = sections.get(maxScoreIndex.getFirst());
+        Section section = sections.get(maxScoreIndex.first);
+        System.out.println(String.format("%d %d", maxScoreIndex.first, maxScoreIndex.second.bookIds.size()));
+        System.out.println(maxScoreIndex.second.bookIds);
         sections.remove(maxScoreIndex);
         //update sections
-        removeBooks(maxScoreIndex.getSecond(), sections);
+        removeBooks(maxScoreIndex.second, sections);
         //next round
         getAnswer(b, l, d - section.t, books, sections);
     }
@@ -111,5 +115,15 @@ public class Main {
     public static class UsedBooks {
         int score;
         List<Integer> bookIds = new ArrayList<>();
+    }
+
+    public static class Pair<T, S> {
+        public T first;
+        public S second;
+
+        Pair(T first, S second) {
+            this.first = first;
+            this.second = second;
+        }
     }
 }
