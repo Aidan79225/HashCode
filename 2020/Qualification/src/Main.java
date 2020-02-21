@@ -70,7 +70,7 @@ public class Main {
             Section section = sections.get(maxScoreIndex.first);
             section.used = true;
             //update sections
-            removeBooks(maxScoreIndex.second, sections);
+//            removeBooks(maxScoreIndex.second, sections);
             d -= section.t;
         }
     }
@@ -85,10 +85,13 @@ public class Main {
                 continue;
             }
             UsedBooks usedBooks = getScore(d, books, sections.get(i));
-            int score = usedBooks.score;
-            score -= getLost(section.t, sections, avg);
-            if (usedBooks.score > max) {
+            int score = usedBooks.score/section.t;
+//            score -= getLost(section.t, sections, avg);
+            if (score > max) {
                 max = score;
+                cur = i;
+                curUsedBooks = usedBooks;
+            } else if (usedBooks.score == max && sections.get(cur).m < section.m) {
                 cur = i;
                 curUsedBooks = usedBooks;
             }
@@ -111,6 +114,7 @@ public class Main {
         int day = d - section.t;
         UsedBooks ans = new UsedBooks();
         Iterator<Integer> iterator = section.bookIds.iterator();
+//        ans.score = -section.t;
         while (day > 0) {
             for (int i = 0; i < section.m && iterator.hasNext(); i++) {
                 int id = iterator.next();
@@ -163,6 +167,7 @@ public class Main {
         int score;
         List<Integer> bookIds = new ArrayList<>();
     }
+
 
     public static class Pair<T, S> {
         public T first;
