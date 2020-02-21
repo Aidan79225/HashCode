@@ -70,7 +70,7 @@ public class Main {
             Section section = sections.get(maxScoreIndex.first);
             section.used = true;
             //update sections
-//            removeBooks(maxScoreIndex.second, sections);
+            removeBooks(maxScoreIndex.second, sections);
             d -= section.t;
         }
     }
